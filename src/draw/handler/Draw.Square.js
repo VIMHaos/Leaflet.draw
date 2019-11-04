@@ -32,63 +32,33 @@ L.Draw.Square = L.Draw.SimpleShape.extend({
 
         L.Draw.SimpleShape.prototype.initialize.call(this, map, options);
 
-        this._northEastPixel;
-        this._southWestPixel;
-        this._check = false;
-
-        this._x1 = 0, this._y1 = 0, this._x2 = 0, this._y2 = 0;
-
         // this._map.on("mousedown", this._mouseDown);
         // this._map.on("mousemove", this._mouseMove);
         // this._map.on("mouseup", this._mouseUp);
     },
 
-    _reCalc: function () {
-        // 1 - vzdy horny lavy
-        // 3 - vzdy dolny pravy
-        newX1 = Math.min(this._x1, this._x2);
-        newY1 = Math.min(this._y1, this._y2);
-        newX3 = Math.max(this._x1, this._x2);
-        newY3 = Math.max(this._y1, this._y2);
+    _calcNewCoordsSquare: function (startLatLng, finishLatLng) {
+        var northEastPixel, southWestPixel;
 
-        // 2 - vzdy horny pravy
-        // 4 - vzdy dolny lavy
-        newX2 = Math.max(this._x1, this._x2);
-        newY2 = Math.min(this._y1, this._y2);
-        newX4 = Math.min(this._x1, this._x2);
-        newY4 = Math.max(this._y1, this._y2);
+        var newX1 = Math.min(startLatLng.lat, finishLatLng.lat),
+            newY1 = Math.min(startLatLng.lng, finishLatLng.lng),
+            newX2 = Math.max(startLatLng.lat, finishLatLng.lat),
+            newY2 = Math.max(startLatLng.lng, finishLatLng.lng);
 
-        var height = newX3 - newX1;
+        var height = newX2 - newX1;
 
         // ak sa taha smerom dole
-        if (this._y2 >= this._y1) {
-            this._northEastPixel = this._map.containerPointToLatLng([newX1, newY1]);
-            this._southWestPixel = this._map.containerPointToLatLng([newX1 + height, newY1 + height]);
+        if (finishLatLng.lng >= startLatLng.lng) {
+            northEastPixel = new L.LatLng(newX1, newY1);
+            southWestPixel = new L.LatLng(newX1 + height, newY1 + height);
         }
         // ak sa taha smerom hore
         else {
-            this._northEastPixel = this._map.containerPointToLatLng([newX3 - height, newY3 - height]);
-            this._southWestPixel = this._map.containerPointToLatLng([newX3, newY3]);
+            northEastPixel = new L.LatLng(newX2 - height, newY2 - height);
+            southWestPixel = new L.LatLng(newX2, newY2);
         }
 
-    },
-
-    _onMouseDown: function (e) {
-        console.log('_mouseDown', e);
-        var originalEvent = e.originalEvent;
-        this._x1 = originalEvent.clientX;
-        this._y1 = originalEvent.clientY;
-        this._reCalc();
-        this._check = true;
-    },
-
-    _onMouseMove: function (e) {
-        if (this._check) {
-            console.log('_onMouseMove', e);
-            this._x2 = originalEvent.clientX;
-            this._y2 = originalEvent.clientY;
-            this._reCalc();
-        }
+        return [northEastPixel, southWestPixel];
     },
 
     // @method disable(): void
@@ -102,14 +72,6 @@ L.Draw.Square = L.Draw.SimpleShape.extend({
     },
 
     _onMouseUp: function (e) {
-        console.log('_onMouseUp', this._check);
-        if (this._check) {
-            console.log('_mouseUp', e);
-            this._x1 = 0, this._y1 = 0, this._x2 = 0, this._y2 = 0;
-            this._check = false;
-            return;
-        }
-
         if (!this._shape && !this._isCurrentlyTwoClickDrawing) {
             this._isCurrentlyTwoClickDrawing = true;
             return;
@@ -124,29 +86,20 @@ L.Draw.Square = L.Draw.SimpleShape.extend({
     },
 
     _drawShape: function (latlng) {
+        var newShape = this._calcNewCoordsSquare(this._startLatLng, latlng);
+
+        console.log('_drawShape', this._startLatLng, latlng);
+        console.log('_newShape', newShape[0], newShape[1]);
+
         if (!this._shape) {
-            this._shape = new L.Rectangle(new L.LatLngBounds(this._startLatLng, latlng), this.options.shapeOptions);
+            this._shape = new L.Rectangle(new L.LatLngBounds(newShape[0], newShape[1]), this.options.shapeOptions);
             this._map.addLayer(this._shape);
         } else {
-            this._shape.setBounds(new L.LatLngBounds(this._startLatLng, latlng));
+            this._shape.setBounds(new L.LatLngBounds(newShape[0], newShape[1]));
         }
     },
 
     _fireCreatedEvent: function () {
-        // var northEast = map.options.crs.project( this._northEastPixel );
-        // var southWest = map.options.crs.project( this._southWestPixel );
-
-        console.log(this._northEastPixel);
-        console.log(this._southWestPixel);
-        console.log(this._shape.getBounds());
-
-        // var rectangle = new L.polygon(
-        //     [[southWestWGS[1], southWestWGS[0]],
-        //     [northWestWGS[1], northWestWGS[0]],
-        //     [northEastWGS[1], northEastWGS[0]],
-        //     [southEastWGS[1], southEastWGS[0]]
-        // ], this.options.shapeOptions)
-
         var rectangle = new L.Rectangle(this._shape.getBounds(), this.options.shapeOptions);
         L.Draw.SimpleShape.prototype._fireCreatedEvent.call(this, rectangle);
     },
