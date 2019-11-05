@@ -10,7 +10,6 @@ var deps = {
     DrawHandlers: {
         src: [
             'draw/handler/Draw.Feature.js',
-            'draw/handler/Draw.PolylineArrow.js',
             'draw/handler/Draw.Polyline.js',
             'draw/handler/Draw.Polygon.js',
             'draw/handler/Draw.SimpleShape.js',

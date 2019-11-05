@@ -129,14 +129,6 @@ L.drawLocal = {
 					end: 'Click first point to close this shape.'
 				}
 			},
-			polylineArrow: {
-				error: '<strong>Error:</strong> shape edges cannot cross!',
-				tooltip: {
-					start: 'Click to start drawing arraw.',
-					cont: 'Click to continue drawing arraw.',
-					end: 'Click last point to finish arraw.'
-				}
-			},
 			polyline: {
 				error: '<strong>Error:</strong> shape edges cannot cross!',
 				tooltip: {

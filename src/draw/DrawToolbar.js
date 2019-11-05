@@ -9,7 +9,6 @@ L.DrawToolbar = L.Toolbar.extend({
     },
 
     options: {
-        polylineArrow: {},
         polyline: {},
         polygon: {},
         rectangle: {},
@@ -38,11 +37,6 @@ L.DrawToolbar = L.Toolbar.extend({
     // Get mode handlers information
     getModeHandlers: function (map) {
         return [
-            {
-                enabled: this.options.polylineArrow,
-                handler: new L.Draw.PolylineArrow(map, this.options.polylineArrow),
-                title: L.drawLocal.draw.toolbar.buttons.polylineArrow
-            },
             {
                 enabled: this.options.polyline,
                 handler: new L.Draw.Polyline(map, this.options.polyline),
