@@ -31,10 +31,6 @@ L.Draw.Square = L.Draw.SimpleShape.extend({
         this._initialLabelText = L.drawLocal.draw.handlers.square.tooltip.start;
 
         L.Draw.SimpleShape.prototype.initialize.call(this, map, options);
-
-        // this._map.on("mousedown", this._mouseDown);
-        // this._map.on("mousemove", this._mouseMove);
-        // this._map.on("mouseup", this._mouseUp);
     },
 
     _calcNewCoordsSquare: function (startLatLng, finishLatLng) {

@@ -21,12 +21,15 @@ L.Draw.PolylineArrow = L.Draw.Feature.extend({
             iconSize: new L.Point(8, 8),
             className: 'leaflet-div-icon leaflet-editing-icon'
         }),
+        touchIcon: new L.DivIcon({
+            iconSize: new L.Point(20, 20),
+            className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+        }),
         guidelineDistance: 20,
         maxGuideLineLength: 4000,
-
         shapeOptions: {
             stroke: true,
-            color: 'blue',
+            color: '#3388ff',
             weight: 4,
             opacity: 0.5,
             fill: false,
