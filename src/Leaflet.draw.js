@@ -100,9 +100,11 @@ L.drawLocal = {
 				polyline: 'Draw a polyline',
 				polygon: 'Draw a polygon',
 				rectangle: 'Draw a rectangle',
+				square: 'Draw a square',
 				circle: 'Draw a circle',
 				marker: 'Draw a marker',
-				circlemarker: 'Draw a circlemarker'
+				circlemarker: 'Draw a circlemarker',
+				text: 'Draw a custom text'
 			}
 		},
 		handlers: {
